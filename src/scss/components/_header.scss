@@ -1,0 +1,257 @@
+@use '../abstracts' as a;
+
+.header {
+    @include a.flexbox($align: center, $justify: space-between);
+    padding-block: var(--space-2);
+    border-bottom: 0.5px solid var(--color-nav-border);
+
+    &__nav {
+        @include a.flexbox($gap: var(--space-5));
+
+        @include a.bp($to: "tablet") {
+            @include a.flexbox($direction: row-reverse, $align: center, $gap: var(--space-1));
+        }
+    }
+
+    &__links {
+        @include a.flexbox($align: center, $justify: center, $gap: var(--space-2-5));
+
+        li:hover {
+            .header__link {
+                color: var(--color-nav-hover-text);
+                transition: all 0.3s ease-in-out;
+            }
+
+            .header__link::after {
+                width: 100%;
+            }
+        }
+
+        @include a.bp($to: "tablet") {
+            @include a.flexbox($direction: column, $gap: var(--space-1-5));
+        }
+    }
+
+    &__link {
+        color: var(--color-nav-text);
+        position: relative;
+
+        &::after {
+            content: "";
+            position: absolute;
+            background-color: var(--color-nav-hover-border);
+            left: 0;
+            bottom: 0;
+            top: a.rem(60);
+            width: 0%;
+            height: a.rem(3);
+            border-radius: a.rem(2);
+            transition: width 0.3s ease-in-out;
+
+            @include a.bp($to: "tablet") {
+                top: a.rem(24);
+            }
+        }
+
+        &:focus::after,
+        &:focus-visible::after,
+        &:hover::after {
+            width: 100%;
+        }
+
+        @include a.bp($to: "tablet") {
+            font-weight: var(--fw-bold);
+        }
+    }
+
+    &__actions {
+        @include a.flexbox($align: center, $justify: center, $gap: var(--space-2));
+        position: relative;
+
+        button:not(.header__cart-checkout-btn) {
+            background: none;
+            border: none;
+            padding: 0;
+        }
+    }
+
+    &__cart-btn {
+        position: relative;
+        color: var(--color-nav-cart-btn);
+
+        &:focus,
+        &:focus-visible,
+        &:hover {
+            cursor: pointer;
+            color: var(--color-nav-hover-cart-btn);
+            transition: all 0.3s ease-in-out;
+        }
+
+        .cart-icon-wrapper {
+            position: relative;
+            @include a.flexbox($align: center);
+        }
+
+        .cart-count {
+            position: absolute;
+            top: a.rem(-15);
+            right: a.rem(-10);
+            background-color: var(--color-nav-cart-count-btn-bg);
+            color: var(--color-nav-cart-count-btn-text);
+            font-size: var(--fs-xs);
+            padding: 0 a.rem(8);
+            border-radius: a.rem(12);
+            font-weight: var(--fw-bold);
+        }
+    }
+
+    &__cart-modal {
+        @include a.flexbox($direction: column);
+        background-color: var(--color-cart-modal-bg);
+        position: absolute;
+        top: a.rem(60);
+        right: a.rem(-100);
+        width: a.rem(380);
+        height: a.rem(250);
+        box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+        transform: translateY(-50px);
+        opacity: 0;
+        pointer-events: none;
+        display: flex;
+        visibility: hidden;
+        border-radius: a.rem(8);
+        z-index: 2;
+
+        &.mounted {
+            transition: all 0.3s ease-in-out;
+        }
+
+        &.active {
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: auto;
+            visibility: visible;
+        }
+
+        @include a.bp($to: "tablet") {
+            top: a.rem(65);
+            right: a.rem(-8);
+            width: a.rem(350);
+        }
+    }
+
+    &__cart-title {
+        font-size: var(--fs-body);
+        font-weight: var(--fw-bold);
+        color: var(--color-cart-modal-title-text);
+        text-align: left;
+        padding: var(--space-1) var(--space-1-5);
+        border-bottom: 0.5px solid var(--color-nav-border);
+    }
+
+    &__cart-contents {
+        @include a.flexbox($align: center, $justify: center);
+        flex: 1;
+        color: var(--color-cart-modal-content-text);
+        font-weight: var(--fw-bold);
+    }
+
+    &__cart-item {
+        @include a.flexbox($direction: column, $gap: a.rem(24));
+        flex: 1;
+        padding: var(--space-1-5);
+
+        &-details {
+            @include a.flexbox($align: center, $justify: space-between);
+
+            svg {
+                color: var(--color-nav-cart-delete-btn);
+                transition: color 0.3s ease-in-out;
+
+                &:hover {
+                    color: var(--color-nav-cart-delete-btn-hover);
+                    cursor: pointer;
+                }
+            }
+        }
+
+        &-image {
+            width: a.rem(60);
+            height: a.rem(60);
+            border-radius: a.rem(8);
+        }
+
+        &-title {
+            color: var(--color-nav-cart-item-title-text);
+            font-size: var(--fs-body);
+
+            @include a.bp($to: "desktop") {
+                font-size: var(--fs-s);
+            }
+        }
+
+        &-price {
+            color: var(--color-nav-cart-item-price-text);
+
+            @include a.bp($to: "desktop") {
+                font-size: var(--fs-s);
+            }
+        }
+
+        &-delete-btn {
+
+            &:focus,
+            &:focus-visible {
+                outline: 2px solid var(--color-focus-outline);
+            }
+        }
+
+        .cart-total-quantity {
+            color: var(--color-nav-cart-item-total-price-text);
+            font-weight: var(--fw-bold);
+        }
+    }
+
+    &__cart-checkout-btn {
+        color: var(--color-nav-cart-checkout-btn-text);
+        font-weight: var(--fw-bold);
+        background: var(--color-nav-cart-checkout-btn-bg);
+        border: none;
+        padding: a.rem(12);
+        border-radius: a.rem(8);
+        transition: background 0.3s ease-in-out;
+
+        &:hover {
+            background: hsla(var(--color-orange), 0.8);
+            cursor: pointer;
+        }
+    }
+
+    &__profile-btn {
+        img {
+            width: a.rem(40);
+            height: a.rem(40);
+            border: 2px solid transparent;
+            border-radius: 50%;
+
+            &:hover {
+                cursor: pointer;
+                border: 2px solid var(--color-nav-profile-btn-border);
+                transition: all 0.3s ease-in-out;
+            }
+        }
+
+        &:focus,
+        &:focus-visible {
+            img {
+                cursor: pointer;
+                border: 2px solid var(--color-nav-profile-btn-border);
+                transition: all 0.3s ease-in-out;
+            }
+        }
+    }
+
+    @include a.bp($to: "tablet") {
+        padding-block: var(--space-1);
+    }
+}
